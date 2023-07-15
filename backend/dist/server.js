@@ -18,6 +18,7 @@ const getTracks_1 = require("./api/getTracks");
 const getAllTracks_1 = require("./api/getAllTracks");
 const getAllArtists_1 = require("./api/getAllArtists");
 const listArtists_1 = require("./api/listArtists");
+const listAlbums_1 = require("./api/listAlbums");
 const authHandler_1 = require("./api/authHandler");
 /*
     Routes needed:
@@ -62,13 +63,14 @@ app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 // Get all tracks, push allTracks and allArtists to client. 
 app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /alltracks");
-    let allTracks;
     try {
-        allTracks = yield (0, getAllTracks_1.getAllTracks)(accessKeyData.access_token);
+        const allTracks = yield (0, getAllTracks_1.getAllTracks)(accessKeyData.access_token);
         const allArtists = (0, listArtists_1.listArtists)(allTracks);
+        const allAlbums = (0, listAlbums_1.listAlbums)(allTracks);
         const allData = {
             tracks: allTracks,
-            artists: allArtists
+            artists: allArtists,
+            albums: allAlbums
         };
         res.send(allData);
     }

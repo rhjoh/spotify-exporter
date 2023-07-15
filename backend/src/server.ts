@@ -5,6 +5,7 @@ import { getTracks } from './api/getTracks';
 import { getAllTracks } from './api/getAllTracks';
 import { getAllArtists } from './api/getAllArtists';
 import { listArtists } from './api/listArtists';
+import { listAlbums } from './api/listAlbums';
 import { handleLogin, handleToken } from './api/authHandler';
 
 
@@ -57,13 +58,14 @@ app.get('/tracks', async (req, res) => {
 // Get all tracks, push allTracks and allArtists to client. 
 app.get('/alltracks', async (req, res) => {
     console.log("Got traffic on /alltracks")
-    let allTracks;
     try {
-        allTracks = await getAllTracks(accessKeyData.access_token)
+        const allTracks = await getAllTracks(accessKeyData.access_token)
         const allArtists = listArtists(allTracks)
+        const allAlbums = listAlbums(allTracks)
         const allData = {
             tracks: allTracks,
-            artists: allArtists
+            artists: allArtists,
+            albums: allAlbums
         }
         res.send(allData)
     } catch (err) {
