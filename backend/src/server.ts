@@ -1,23 +1,16 @@
-import express, { query } from 'express';
+import express from 'express';
 import cors from 'cors';
-import querystring from 'querystring';
 import { getTracks } from './api/getTracks';
 import { getAllTracks } from './api/getAllTracks';
 import { getAllArtists } from './api/getAllArtists';
 import { listArtists } from './api/listArtists';
 import { listAlbums } from './api/listAlbums';
 import { handleLogin, handleToken } from './api/authHandler';
-
-
-
+import { createCSV } from './api/createCSV';
 /*  
     Routes needed: 
-    -- Get library stats: 
-        -- Number of tracks
-        -- Number of artists
-        -- Number of albums
-            (all inferred from list of tracks?)
-        -- Playlist metadata (name, number of tracks, etc)
+    -- Playlist metadata (name, number of tracks, etc)
+
     - Needs middleware to handle token refresh. 
 */
 
@@ -67,24 +60,14 @@ app.get('/alltracks', async (req, res) => {
             artists: allArtists,
             albums: allAlbums
         }
+        const csvComplete = await createCSV(allTracks);
+        if (csvComplete) {
+            console.log("CSV created")
+        }
         res.send(allData)
     } catch (err) {
         console.log(err)
         res.send(JSON.stringify("Error getting tracks"))
-    }
-})
-
-// Theres no route provided to list all of a users saved artists. Only top artists (max 50?)
-// https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
-// We'll have to just infer this from /alltracks endpoint - track data contains artist & album data.  
-app.get('/artists', async (req, res) => {
-    console.log("Got traffic on /artists")
-    try {
-        let allArtists = await getAllArtists(accessKeyData.access_token)
-        res.send(allArtists)
-    } catch (err) {
-        console.log(err)
-        res.send(JSON.stringify("Error getting artists"))
     }
 })
 

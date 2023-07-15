@@ -16,10 +16,10 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const getTracks_1 = require("./api/getTracks");
 const getAllTracks_1 = require("./api/getAllTracks");
-const getAllArtists_1 = require("./api/getAllArtists");
 const listArtists_1 = require("./api/listArtists");
 const listAlbums_1 = require("./api/listAlbums");
 const authHandler_1 = require("./api/authHandler");
+const createCSV_1 = require("./api/createCSV");
 /*
     Routes needed:
     -- Get library stats:
@@ -72,25 +72,15 @@ app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* 
             artists: allArtists,
             albums: allAlbums
         };
+        const csvComplete = yield (0, createCSV_1.createCSV)(allTracks);
+        if (csvComplete) {
+            console.log("CSV created");
+        }
         res.send(allData);
     }
     catch (err) {
         console.log(err);
         res.send(JSON.stringify("Error getting tracks"));
-    }
-}));
-// Theres no route provided to list all of a users saved artists. Only top artists (max 50?)
-// https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
-// We'll have to just infer this from /alltracks endpoint - track data contains artist & album data.  
-app.get('/artists', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Got traffic on /artists");
-    try {
-        let allArtists = yield (0, getAllArtists_1.getAllArtists)(accessKeyData.access_token);
-        res.send(allArtists);
-    }
-    catch (err) {
-        console.log(err);
-        res.send(JSON.stringify("Error getting artists"));
     }
 }));
 // Test route 
