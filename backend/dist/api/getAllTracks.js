@@ -43,6 +43,10 @@ function getAllTracks(token) {
             }
         });
         const data = yield response.json();
+        // Push tracks from first call
+        data.items.map((item) => {
+            returnedTracks.push(item);
+        });
         console.log("Getting " + data.total + " tracks.");
         yield fetchAllTracks(data.next);
         return returnedTracks;

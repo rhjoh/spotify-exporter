@@ -5,6 +5,9 @@ import { getTracks } from './api/getTracks';
 import { getAllTracks } from './api/getAllTracks';
 import { getAllArtists } from './api/getAllArtists';
 import { listArtists } from './api/listArtists';
+import { handleLogin, handleToken } from './api/authHandler';
+
+
 
 /*  
     Routes needed: 
@@ -25,39 +28,19 @@ const redirect_URI = 'http://localhost:3000/spotify_landing';
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 let accessKeyData: any = {}
 
-// Move auth flow to separate file? 
-app.get('/login', (req, res) => {
-    const scope = "user-read-private user-read-email user-top-read user-library-read"
-    res.redirect('https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-            response_type: 'code',
-            client_id: clientID,
-            scope: scope,
-            redirect_uri: redirect_URI
-        }))
+app.get('/login', async (req, res) => {
+    const loginResponse = await handleLogin(clientID, redirect_URI)
+    res.redirect(loginResponse.url)
+
 })
 
-app.get('/auth', (req, res) => {
+app.get('/auth', async (req, res) => {
     console.log("Got traffic on /auth")
-    const encodedStrings = btoa(clientID + ':' + clientSecret)
-    const bodyParams = {
-        grant_type: "authorization_code",
-        code: req.headers.authorization?.split(' ')[1],
-        redirect_uri: 'http://localhost:3000/spotify_landing',
-    }
-    fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-            Authorization: `Basic ${encodedStrings}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: querystring.stringify(bodyParams)
-    }).then(res => res.json()).then(data => {
-
-        accessKeyData = data;
-        console.log(accessKeyData)
-        res.send(data)
-    })
+    const code: string | undefined = req.headers.authorization?.split(' ')[1]
+    const bearerToken = await handleToken(code, clientID, clientSecret)
+    accessKeyData = bearerToken;
+    console.log(bearerToken)
+    res.send(accessKeyData)
 })
 
 // Gets top 20 tracks. 
@@ -71,9 +54,8 @@ app.get('/tracks', async (req, res) => {
     }
 }
 )
-// Get all tracks, push allTracks to client. 
+// Get all tracks, push allTracks and allArtists to client. 
 app.get('/alltracks', async (req, res) => {
-    //TODO: Get number of albums 
     console.log("Got traffic on /alltracks")
     let allTracks;
     try {

@@ -14,11 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const querystring_1 = __importDefault(require("querystring"));
 const getTracks_1 = require("./api/getTracks");
 const getAllTracks_1 = require("./api/getAllTracks");
 const getAllArtists_1 = require("./api/getAllArtists");
 const listArtists_1 = require("./api/listArtists");
+const authHandler_1 = require("./api/authHandler");
 /*
     Routes needed:
     -- Get library stats:
@@ -26,51 +26,28 @@ const listArtists_1 = require("./api/listArtists");
         -- Number of artists
         -- Number of albums
             (all inferred from list of tracks?)
-
         -- Playlist metadata (name, number of tracks, etc)
-    
     - Needs middleware to handle token refresh.
 */
 const app = (0, express_1.default)();
-// TODO: Set proper options for cors.
 app.use((0, cors_1.default)());
 const clientID = "7f6bb2cf63fc486ca40380f992a53051";
 const redirect_URI = 'http://localhost:3000/spotify_landing';
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 let accessKeyData = {};
-// Move auth flow to separate file? 
-app.get('/login', (req, res) => {
-    const scope = "user-read-private user-read-email user-top-read user-library-read";
-    res.redirect('https://accounts.spotify.com/authorize?' +
-        querystring_1.default.stringify({
-            response_type: 'code',
-            client_id: clientID,
-            scope: scope,
-            redirect_uri: redirect_URI
-        }));
-});
-app.get('/auth', (req, res) => {
+app.get('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const loginResponse = yield (0, authHandler_1.handleLogin)(clientID, redirect_URI);
+    res.redirect(loginResponse.url);
+}));
+app.get('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log("Got traffic on /auth");
-    const encodedStrings = btoa(clientID + ':' + clientSecret);
-    const bodyParams = {
-        grant_type: "authorization_code",
-        code: (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1],
-        redirect_uri: 'http://localhost:3000/spotify_landing',
-    };
-    fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-            Authorization: `Basic ${encodedStrings}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: querystring_1.default.stringify(bodyParams)
-    }).then(res => res.json()).then(data => {
-        accessKeyData = data;
-        console.log(accessKeyData);
-        res.send(data);
-    });
-});
+    const code = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+    const bearerToken = yield (0, authHandler_1.handleToken)(code, clientID, clientSecret);
+    accessKeyData = bearerToken;
+    console.log(bearerToken);
+    res.send(accessKeyData);
+}));
 // Gets top 20 tracks. 
 app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /tracks");
@@ -82,13 +59,11 @@ app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.send("No tracks found");
     }
 }));
-// Get all tracks, push allTracks to client. 
+// Get all tracks, push allTracks and allArtists to client. 
 app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /alltracks");
     let allTracks;
     try {
-        // Now I have two arrays: tracks and artists.
-        // 
         allTracks = yield (0, getAllTracks_1.getAllTracks)(accessKeyData.access_token);
         const allArtists = (0, listArtists_1.listArtists)(allTracks);
         const allData = {
@@ -102,9 +77,9 @@ app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.send(JSON.stringify("Error getting tracks"));
     }
 }));
-// Theres no route provided to list all of a users saved artists. Only top artists (max 40)
+// Theres no route provided to list all of a users saved artists. Only top artists (max 50?)
 // https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
-// We'll have to just infer this from /alltracks endpoint which already contains the data anyway. 
+// We'll have to just infer this from /alltracks endpoint - track data contains artist & album data.  
 app.get('/artists', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /artists");
     try {

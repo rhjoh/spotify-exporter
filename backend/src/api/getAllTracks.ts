@@ -31,6 +31,10 @@ export async function getAllTracks(token: string): Promise<any[]>{
         }
     })
     const data = await response.json()
+    // Push tracks from first call
+    data.items.map((item: any) => {
+        returnedTracks.push(item)
+    })
     console.log("Getting " + data.total + " tracks.")
     await fetchAllTracks(data.next)
     return returnedTracks;
