@@ -44,7 +44,7 @@ app.get('/tracks', async (req, res) => {
     if (topTracks) {
         res.send(topTracks)
     } else {
-        res.send("No tracks found")
+        res.send(JSON.stringify("Couldn't get user tracks"))
     }
 }
 )

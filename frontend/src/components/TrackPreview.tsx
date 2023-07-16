@@ -1,4 +1,8 @@
+// This component lists the top 10 or so tracks as an example before the user downloads their library data
+
+import "./trackpreview.css"
 import { useState, useEffect } from 'react';
+import { TrackListItem } from "./TrackListItem";
 
 const TopTracks = (props: any) => {
     const [topTracks, setTopTracks] = useState<any>(null);
@@ -23,12 +27,23 @@ const TopTracks = (props: any) => {
 
     }, [])
     return (
-        <div>
-            <button onClick={() => getAllTracks()}>Get all tracks</button>
-            {/* Shows tops 20 track titles */}
-            {/*             {topTracks !== null ? topTracks.map((track: any, index: any) => {
-                return <p key={index}>{track.track.name}</p>
-            }) : <p>Waiting for tracks</p>} */}
+        <div className='track-container'>
+            <div className="toptracks">
+                {topTracks !== null && topTracks.totalTracks !== null ? 
+                <button onClick={() => getAllTracks()} className="generateButton">Generate Full CSV - {topTracks.totalTracks} tracks</button>
+                : null }
+                {/* Add button without totalTracks here?  */}
+                <br />
+                <span id='tracks-list-headertext'>Your recent tracks:</span>
+                <div className="tracks-list">
+                    {topTracks !== null ? topTracks.returnedTracks.map((track: any, index: any) => {
+                        return <>
+                            <TrackListItem track={track} key={index} />
+                        </>
+                    }) : null}
+                </div>
+            </div>
+
             {libraryData !== null ?
                 <div>
                     <p>Total artists: {libraryData.artists.length}</p>

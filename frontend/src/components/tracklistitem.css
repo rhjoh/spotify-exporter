@@ -1,0 +1,60 @@
+.track-list-item{
+    border: solid #BBC3C3 1px;
+    border-radius: 6px;
+    min-height: 4em;
+    min-width: 380px;
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+    background-color: #101210;
+    overflow: wrap;
+}
+.track-list-item:hover{
+    background-color: #FEFEFE;
+}
+.track-list-item:hover .track-list-item-artist{
+    color: #030403;
+}
+.track-list-item:hover #middledot{
+    color: greenyellow;
+}
+.track-list-item:hover .track-list-item-link{
+    color: #030403;
+    font-weight: bold;
+}
+
+.track-list-item-info{
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.8em;
+}
+
+.track-list-item-artist{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #8C918E
+}
+.track-list-item-artist #middledot{
+    font-size: 2rem;
+}
+
+.track-list-item-track{
+    color: #8C918E;
+    margin-left: 1em;
+}
+
+
+.track-list-item-link a{
+    color: #8C918E;
+    margin-right: 1em;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    margin-left: auto;
+}
+.track-list-item-link {
+    color: #8C918E;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}

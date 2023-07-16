@@ -1,6 +1,9 @@
 export async function getTracks(token: string){
     const access_token = token;
-    let returnedTracks: any[] = [];
+    let tracksResponse = {
+        returnedTracks: [],
+        totalTracks: 0
+    }
 
     await fetch('https://api.spotify.com/v1/me/tracks', {
         method: 'GET',
@@ -8,7 +11,9 @@ export async function getTracks(token: string){
             Authorization: `Bearer ${access_token}`,
         }
     }).then(res => res.json()).then(data => {
-        returnedTracks = data.items;
+        tracksResponse.returnedTracks = data.items;
+        tracksResponse.totalTracks = data.total;
+        console.log(tracksResponse)
     });
-    return returnedTracks;
+    return tracksResponse;
 }

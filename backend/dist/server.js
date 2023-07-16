@@ -22,12 +22,8 @@ const authHandler_1 = require("./api/authHandler");
 const createCSV_1 = require("./api/createCSV");
 /*
     Routes needed:
-    -- Get library stats:
-        -- Number of tracks
-        -- Number of artists
-        -- Number of albums
-            (all inferred from list of tracks?)
-        -- Playlist metadata (name, number of tracks, etc)
+    -- Playlist metadata (name, number of tracks, etc)
+
     - Needs middleware to handle token refresh.
 */
 const app = (0, express_1.default)();
@@ -57,7 +53,7 @@ app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.send(topTracks);
     }
     else {
-        res.send("No tracks found");
+        res.send(JSON.stringify("Couldn't get user tracks"));
     }
 }));
 // Get all tracks, push allTracks and allArtists to client. 

@@ -1,6 +1,9 @@
+// This page is displayed after the login. 
+
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import TopTracks from "./TopTracks";
+import TrackPreview from "../components/TrackPreview";
+import "./landing.css"
 
 const LandingPage = () => {
     const location = useLocation();
@@ -14,7 +17,9 @@ const LandingPage = () => {
         token_type: string
     }
 
-    const [fetchResult, setFetchResult] = useState<authResponse | null>(null);
+    // tokenDetails contains refresh token 
+    // eslint-disable-next-line
+    const [tokenDetails, setTokenDetails] = useState<authResponse | null>(null);
     const [isAuthed, setIsAuthed] = useState<boolean>(false);
 
     useEffect(() => {
@@ -26,17 +31,26 @@ const LandingPage = () => {
         })
             .then(response => response.json())
             .then(data => {
-                setFetchResult(data)
+                setTokenDetails(data)
                 setIsAuthed(true)
-                console.log(data)
             })
     }, [returnedCode])
 
     return (
-        <div>
-            <h1>Landing page</h1>
-            {fetchResult !== null ? <p>Got an auth response </p> : <p>Waiting for auth</p>}
-            {isAuthed ? <TopTracks /> : null}
+        /* 
+        |          Navbar             |
+        | Paragraph | Generate Button |
+        |     List of top 10 tracks   |
+        */
+
+        <div className="landing-container">
+            <span className="intro-paragraph">This app generates a CSV document of your 'Like Songs' playlist on Spotify.
+            <br />
+            It authenticates securely via the Spotify API and no data is stored. 
+            <br />
+            Remove access to this app via your Spotify account at any time.
+            </span>
+            {isAuthed ? <TrackPreview /> : null}
         </div>
     )
 }

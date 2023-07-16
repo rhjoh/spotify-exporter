@@ -57,6 +57,7 @@ const createCSV = (alltracks) => __awaiter(void 0, void 0, void 0, function* () 
         csv_1.default.stringify(writeData, { header: true, columns: csv_headers }, (err, output) => {
             if (err)
                 throw err;
+            // writes to /spotif-analytics/backend/
             fs_1.default.writeFile('output.csv', output, (err) => {
                 if (err)
                     throw err;
