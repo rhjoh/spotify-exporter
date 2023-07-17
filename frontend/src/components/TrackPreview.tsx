@@ -6,15 +6,48 @@ import { TrackListItem } from "./TrackListItem";
 
 const TopTracks = (props: any) => {
     const [topTracks, setTopTracks] = useState<any>(null);
-    const [libraryData, setLibraryData] = useState<any>(null);
+    type DownloadState = 'not_started' | 'download' | 'complete'
+    const [downloadState, setDownloadState] = useState<DownloadState>('not_started');
 
-    const getAllTracks = () => {
-        fetch('http://localhost:8000/alltracks')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                setLibraryData(data)
+    const handleDownloadClick = () => {
+        if (downloadState === 'not_started') {
+            setDownloadState('download')
+            fetch('http://localhost:8000/alltracks')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    setDownloadState('complete')
+                })
+        } else if (downloadState === 'complete') {
+            console.log("Hello")
+            fetch('http://localhost:8000/csvfile')
+            .then(response => response.blob())
+            .then(blobResponse => {
+                const csvURL = URL.createObjectURL(blobResponse).toString()
+                window.location.href = csvURL
             })
+    }
+}
+
+    const getButtonText = () => {
+        switch (downloadState) {
+            case 'not_started':
+                return `Generate Full CSV - ${topTracks.totalTracks} tracks`;
+            case 'download':
+                return "Downloading";
+            case 'complete':
+                return "Download";
+        }
+    }
+    const getButtonClass = () => {
+        switch(downloadState) {
+            case 'not_started':
+                return 'generateButton';
+            case 'download':
+                return 'generateButtonDownload';
+            case 'complete':
+                return 'bi bi-file-earmark-arrow-down generateButton icon-size';
+        }
     }
 
     useEffect(() => {
@@ -29,11 +62,12 @@ const TopTracks = (props: any) => {
     return (
         <div className='track-container'>
             <div className="toptracks">
-                {topTracks !== null && topTracks.totalTracks !== null ? 
-                <button onClick={() => getAllTracks()} className="generateButton">Generate Full CSV - {topTracks.totalTracks} tracks</button>
-                : null }
-                {/* Add button without totalTracks here?  */}
-                <br />
+                <div className="csv-section">
+                    {topTracks !== null && topTracks.totalTracks !== null ?
+                        <button onClick={() => handleDownloadClick()} className={getButtonClass()}>{getButtonText()}</button>
+                        : null}
+                    <br />
+                </div>
                 <span id='tracks-list-headertext'>Your recent tracks:</span>
                 <div className="tracks-list">
                     {topTracks !== null ? topTracks.returnedTracks.map((track: any, index: any) => {
@@ -43,15 +77,6 @@ const TopTracks = (props: any) => {
                     }) : null}
                 </div>
             </div>
-
-            {libraryData !== null ?
-                <div>
-                    <p>Total artists: {libraryData.artists.length}</p>
-                    <p>Total tracks: {libraryData.tracks.length}</p>
-                </div>
-                :
-                <p>Waiting for library data ... </p>
-            }
         </div>
     )
 }

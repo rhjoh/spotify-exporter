@@ -1,7 +1,9 @@
 import csv from 'csv';
 import fs from 'fs';
+import path from 'path'
 
 export const createCSV = async (alltracks: any[]) => {
+    // Can this just be alltracks.keys? 
     const csv_headers = {
         artist: 'artist',
         album: 'album',
@@ -40,16 +42,16 @@ export const createCSV = async (alltracks: any[]) => {
         }
         writeData.push(trackObject)
     })
+
+    const filePath = path.join(__dirname, '../csv_out/output.csv')
     try{ 
     csv.stringify(writeData, {header: true, columns: csv_headers}, (err, output) => {
         if (err) throw err;
-        // writes to /spotif-analytics/backend/
-        fs.writeFile('output.csv', output, (err) => {
+        fs.writeFile(filePath, output, (err) => {
             if (err) throw err;
-            console.log('output.csv saved.');
         });
     });
-    return true;
+    return filePath;
 } catch (err) {
     console.log(err)
     return false;

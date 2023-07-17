@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCSV = void 0;
 const csv_1 = __importDefault(require("csv"));
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const createCSV = (alltracks) => __awaiter(void 0, void 0, void 0, function* () {
+    // Can this just be alltracks.keys? 
     const csv_headers = {
         artist: 'artist',
         album: 'album',
@@ -53,18 +55,17 @@ const createCSV = (alltracks) => __awaiter(void 0, void 0, void 0, function* () 
         };
         writeData.push(trackObject);
     });
+    const filePath = path_1.default.join(__dirname, '../csv_out/output.csv');
     try {
         csv_1.default.stringify(writeData, { header: true, columns: csv_headers }, (err, output) => {
             if (err)
                 throw err;
-            // writes to /spotif-analytics/backend/
-            fs_1.default.writeFile('output.csv', output, (err) => {
+            fs_1.default.writeFile(filePath, output, (err) => {
                 if (err)
                     throw err;
-                console.log('output.csv saved.');
             });
         });
-        return true;
+        return filePath;
     }
     catch (err) {
         console.log(err);

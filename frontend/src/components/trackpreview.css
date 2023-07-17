@@ -10,20 +10,62 @@
     border-radius: 6px;
     border-color: transparent;
     max-width: 75%;
+    min-width: 125px;
     align-self: center;
     height: 3em;
     margin-bottom: 1em;
-
 }
+
 
 .generateButton:hover{
     background-color: greenyellow;
 }
+.generateButtonDownload{
+    background-color: lightgreen;
+    border-radius: 6px;
+    border-color: transparent;
+    max-width: 75%;
+    min-width: 125px;
+    align-self: center;
+    height: 3em;
+    margin-bottom: 1em;
+}
+.generateButtonDownload:after{
+    background-color: lightgreen;
+    border-radius: 6px;
+    border-color: transparent;
+    max-width: 75%;
+    min-width: 125px;
+    align-items: left;
+    height: 3em;
+    margin-bottom: 1em;
+    animation: dotty steps(1,end) 1s infinite;
+    content: '';
+}
+
+@keyframes dotty {
+    0%   { content: ''; }
+        25%  { content: '.'; }
+        50%  { content: '..'; }
+        75%  { content: '...'; }
+        100% { content: ''; }
+}
+
+.csv-section{
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.icon-size{
+/*     font-size: 12px; */
+}
+
 
 .toptracks{
     min-width: 800px;
     max-width: 800px;
-/*     min-height: 400px; */
     display: flex;
     flex-direction: column;
 }
@@ -32,7 +74,6 @@
 }
 
 .tracks-list{
-/*     margin-top: 1em; */
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

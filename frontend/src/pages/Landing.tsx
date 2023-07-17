@@ -44,7 +44,7 @@ const LandingPage = () => {
         */
 
         <div className="landing-container">
-            <span className="intro-paragraph">This app generates a CSV document of your 'Like Songs' playlist on Spotify.
+            <span className="intro-paragraph">This app generates a CSV document of your 'Liked Songs' playlist on Spotify.
             <br />
             It authenticates securely via the Spotify API and no data is stored. 
             <br />
