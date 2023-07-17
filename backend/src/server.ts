@@ -7,10 +7,8 @@ import { listArtists } from './api/listArtists';
 import { listAlbums } from './api/listAlbums';
 import { handleLogin, handleToken } from './api/authHandler';
 import { createCSV } from './api/createCSV';
+import path from 'path'
 /*  
-    Routes needed: 
-    -- Playlist metadata (name, number of tracks, etc)
-
     - Needs middleware to handle token refresh. 
 */
 
@@ -48,39 +46,30 @@ app.get('/tracks', async (req, res) => {
     }
 }
 )
-// Get all tracks, push allTracks and allArtists to client. 
 app.get('/alltracks', async (req, res) => {
     console.log("Got traffic on /alltracks")
     try {
         const allTracks = await getAllTracks(accessKeyData.access_token)
         const allArtists = listArtists(allTracks)
         const allAlbums = listAlbums(allTracks)
-        const allData = {
-            tracks: allTracks,
-            artists: allArtists,
-            albums: allAlbums
-        }
+        // Don't need these after all. Good to have? 
         const csvComplete = await createCSV(allTracks);
         if (csvComplete) {
             console.log("CSV created")
+            res.send(JSON.stringify(csvComplete))
         }
-        res.send(allData)
     } catch (err) {
         console.log(err)
         res.send(JSON.stringify("Error getting tracks"))
     }
 })
 
-// Test route 
-app.get('/util', (req, res) => {
-    console.log("Got traffic on /util")
-    fetch('https://api.spotify.com/v1/me/albums', {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${accessKeyData.access_token}`
-        }
-    }).then(res => res.json()).then(data => {
-        console.log(data.items)
+const filePath = path.join(__dirname, '/csv_out/output.csv')
+app.get('/csvfile', async (req, res) => {
+    console.log("Traffic on /csvfile")
+    res.sendFile(filePath, (err) => {
+        console.log(err)
+        res.send("Error sending file")
     })
 })
 

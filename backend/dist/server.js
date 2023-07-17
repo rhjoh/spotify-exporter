@@ -20,6 +20,7 @@ const listArtists_1 = require("./api/listArtists");
 const listAlbums_1 = require("./api/listAlbums");
 const authHandler_1 = require("./api/authHandler");
 const createCSV_1 = require("./api/createCSV");
+const path_1 = __importDefault(require("path"));
 /*
     Routes needed:
     -- Playlist metadata (name, number of tracks, etc)
@@ -71,13 +72,27 @@ app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const csvComplete = yield (0, createCSV_1.createCSV)(allTracks);
         if (csvComplete) {
             console.log("CSV created");
+            res.send(JSON.stringify(csvComplete));
         }
-        res.send(allData);
+        /*         res.send(allData) */
     }
     catch (err) {
         console.log(err);
         res.send(JSON.stringify("Error getting tracks"));
     }
+}));
+const filePath = path_1.default.join(__dirname, '/csv_out/output.csv');
+const csvHeaders = {
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+    }
+};
+app.get('/csvfile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Traffic on /csvfile");
+    res.sendFile(filePath, (err) => {
+        console.log(err);
+        res.send("Error sending file");
+    });
 }));
 // Test route 
 app.get('/util', (req, res) => {
