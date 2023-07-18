@@ -68,8 +68,10 @@ const filePath = path.join(__dirname, '/csv_out/output.csv')
 app.get('/csvfile', async (req, res) => {
     console.log("Traffic on /csvfile")
     res.sendFile(filePath, (err) => {
-        console.log(err)
-        res.send("Error sending file")
+        if(err){
+            console.log(err)
+            res.send("Error getting CSV")
+        }
     })
 })
 

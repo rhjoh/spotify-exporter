@@ -13,6 +13,7 @@ export const TrackListItem = (props: any) => {
                 </div>
             </div>
             <div className="track-list-item-link">
+                {/* eslint-disable-next-line */}
                 <a href={props.track.track.external_urls.spotify} className="bi bi-box-arrow-up-right"></a>
             </div>
         </div>

@@ -37,19 +37,7 @@ const LandingPage = () => {
     }, [returnedCode])
 
     return (
-        /* 
-        |          Navbar             |
-        | Paragraph | Generate Button |
-        |     List of top 10 tracks   |
-        */
-
         <div className="landing-container">
-            <span className="intro-paragraph">This app generates a CSV document of your 'Liked Songs' playlist on Spotify.
-            <br />
-            It authenticates securely via the Spotify API and no data is stored. 
-            <br />
-            Remove access to this app via your Spotify account at any time.
-            </span>
             {isAuthed ? <TrackPreview /> : null}
         </div>
     )

@@ -5,11 +5,11 @@ const Navbar = () => {
     return (
         <div className="navbar-container">
             <div className='navbar-left'>
-                <span>Spotify Exporter</span>
+                <a href='/'>Spotify Exporter</a>
             </div>
             <div className='navbar-right'>
             <i className="bi bi-github"> </i>
-                <span>Github</span>
+                <a href="https://github.com/rhjoh" className='gh-no-style' target='_blank' rel='noreferrer'>Github</a>
             </div>
         </div>
     )
