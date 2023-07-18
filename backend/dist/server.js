@@ -22,9 +22,6 @@ const authHandler_1 = require("./api/authHandler");
 const createCSV_1 = require("./api/createCSV");
 const path_1 = __importDefault(require("path"));
 /*
-    Routes needed:
-    -- Playlist metadata (name, number of tracks, etc)
-
     - Needs middleware to handle token refresh.
 */
 const app = (0, express_1.default)();
@@ -57,24 +54,18 @@ app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.send(JSON.stringify("Couldn't get user tracks"));
     }
 }));
-// Get all tracks, push allTracks and allArtists to client. 
 app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /alltracks");
     try {
         const allTracks = yield (0, getAllTracks_1.getAllTracks)(accessKeyData.access_token);
         const allArtists = (0, listArtists_1.listArtists)(allTracks);
         const allAlbums = (0, listAlbums_1.listAlbums)(allTracks);
-        const allData = {
-            tracks: allTracks,
-            artists: allArtists,
-            albums: allAlbums
-        };
+        // Don't need these after all. Good to have? 
         const csvComplete = yield (0, createCSV_1.createCSV)(allTracks);
         if (csvComplete) {
             console.log("CSV created");
             res.send(JSON.stringify(csvComplete));
         }
-        /*         res.send(allData) */
     }
     catch (err) {
         console.log(err);
@@ -82,30 +73,15 @@ app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 const filePath = path_1.default.join(__dirname, '/csv_out/output.csv');
-const csvHeaders = {
-    headers: {
-        'Access-Control-Allow-Origin': '*',
-    }
-};
 app.get('/csvfile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Traffic on /csvfile");
     res.sendFile(filePath, (err) => {
-        console.log(err);
-        res.send("Error sending file");
+        if (err) {
+            console.log(err);
+            res.send("Error getting CSV");
+        }
     });
 }));
-// Test route 
-app.get('/util', (req, res) => {
-    console.log("Got traffic on /util");
-    fetch('https://api.spotify.com/v1/me/albums', {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${accessKeyData.access_token}`
-        }
-    }).then(res => res.json()).then(data => {
-        console.log(data.items);
-    });
-});
 app.listen(8000, () => {
     console.log("Listening on port 8000");
 });

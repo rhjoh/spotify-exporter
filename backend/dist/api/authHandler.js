@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleToken = exports.handleLogin = void 0;
 const querystring_1 = __importDefault(require("querystring"));
 const handleLogin = (clientID, redirect_URI) => __awaiter(void 0, void 0, void 0, function* () {
-    const scope = "user-read-private user-read-email user-top-read user-library-read";
+    const scope = "user-top-read user-library-read";
     const loginResponse = yield fetch('https://accounts.spotify.com/authorize?' +
         querystring_1.default.stringify({
             response_type: 'code',

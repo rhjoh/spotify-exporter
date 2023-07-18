@@ -15,11 +15,9 @@ const TopTracks = (props: any) => {
             fetch('http://localhost:8000/alltracks')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                     setDownloadState('complete')
                 })
         } else if (downloadState === 'complete') {
-            console.log("Hello")
             fetch('http://localhost:8000/csvfile')
             .then(response => response.blob())
             .then(blobResponse => {

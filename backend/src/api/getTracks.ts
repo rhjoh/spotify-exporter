@@ -12,6 +12,7 @@ export async function getTracks(token: string){
         }
     }).then(res => res.json()).then(data => {
         tracksResponse.returnedTracks = data.items;
+        console.log(data)
         tracksResponse.totalTracks = data.total;
         console.log(tracksResponse)
     });

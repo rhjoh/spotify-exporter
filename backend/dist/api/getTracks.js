@@ -24,6 +24,7 @@ function getTracks(token) {
             }
         }).then(res => res.json()).then(data => {
             tracksResponse.returnedTracks = data.items;
+            console.log(data);
             tracksResponse.totalTracks = data.total;
             console.log(tracksResponse);
         });

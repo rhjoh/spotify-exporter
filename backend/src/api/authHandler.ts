@@ -1,7 +1,7 @@
 import querystring from "querystring";
 
 export const handleLogin = async (clientID: string, redirect_URI: string) => {
-    const scope = "user-read-private user-read-email user-top-read user-library-read"
+    const scope = "user-top-read user-library-read"
     const loginResponse = await fetch('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
