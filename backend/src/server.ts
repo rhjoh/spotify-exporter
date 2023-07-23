@@ -16,7 +16,7 @@ const app = express();
 app.use(cors())
 
 const devRedirectURI = 'http://localhost:3000/spotify_landing';
-const prodRedirectURI = 'http://rhysjohnston.xyz/spotify_landing'
+const prodRedirectURI = 'https://rhysjohnston.xyz/spotify_landing'
 
 const clientID = "7f6bb2cf63fc486ca40380f992a53051";
 const redirect_URI = prodRedirectURI;

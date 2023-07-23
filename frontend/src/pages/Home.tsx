@@ -4,7 +4,7 @@ const Home = () => {
 
     // How to manage env vars for different environments? 
     const dev_url = "http://localhost:8000/login";
-    const prod_url = "http://rhysjohnston.xyz/login";
+    const prod_url = "https://rhysjohnston.xyz/login";
 
 
     async function handleLogin() {
