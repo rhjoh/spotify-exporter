@@ -13,11 +13,15 @@ export const handleLogin = async (clientID: string, redirect_URI: string) => {
 }
 
 export const handleToken = async (accessCode: string | undefined, clientID: string, clientSecret: string | undefined) => {
+
+    const prodRedirectURI = 'http://rhysjohnston.xyz/spotify_landing';
+    const devRedirectURI = 'http://localhost:3000/spotify_landing';
+
     const encodedStrings = btoa(clientID + ':' + clientSecret)
     const bodyParams = {
         grant_type: "authorization_code",
         code: accessCode,
-        redirect_uri: 'http://localhost:3000/spotify_landing',
+        redirect_uri: prodRedirectURI,
     }
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
