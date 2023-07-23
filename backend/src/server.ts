@@ -15,18 +15,21 @@ import path from 'path'
 const app = express();
 app.use(cors())
 
+const devRedirectURI = 'http://localhost:3000/spotify_landing';
+const prodRedirectURI = 'http://rhysjohnston.xyz/spotify_landing'
+
 const clientID = "7f6bb2cf63fc486ca40380f992a53051";
-const redirect_URI = 'http://localhost:3000/spotify_landing';
+const redirect_URI = prodRedirectURI;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 let accessKeyData: any = {}
 
-app.get('/login', async (req, res) => {
+app.get('/api/login', async (req, res) => {
     const loginResponse = await handleLogin(clientID, redirect_URI)
     res.redirect(loginResponse.url)
 
 })
 
-app.get('/auth', async (req, res) => {
+app.get('/api/auth', async (req, res) => {
     console.log("Got traffic on /auth")
     const code: string | undefined = req.headers.authorization?.split(' ')[1]
     const bearerToken = await handleToken(code, clientID, clientSecret)
@@ -36,7 +39,7 @@ app.get('/auth', async (req, res) => {
 })
 
 // Gets top 20 tracks. 
-app.get('/tracks', async (req, res) => {
+app.get('/api/tracks', async (req, res) => {
     console.log("Got traffic on /tracks")
     let topTracks = await getTracks(accessKeyData.access_token)
     if (topTracks) {
@@ -46,7 +49,7 @@ app.get('/tracks', async (req, res) => {
     }
 }
 )
-app.get('/alltracks', async (req, res) => {
+app.get('/api/alltracks', async (req, res) => {
     console.log("Got traffic on /alltracks")
     try {
         const allTracks = await getAllTracks(accessKeyData.access_token)
@@ -65,7 +68,7 @@ app.get('/alltracks', async (req, res) => {
 })
 
 const filePath = path.join(__dirname, '/csv_out/output.csv')
-app.get('/csvfile', async (req, res) => {
+app.get('/api/csvfile', async (req, res) => {
     console.log("Traffic on /csvfile")
     res.sendFile(filePath, (err) => {
         if(err){
