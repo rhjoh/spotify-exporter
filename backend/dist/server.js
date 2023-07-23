@@ -26,15 +26,17 @@ const path_1 = __importDefault(require("path"));
 */
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+const devRedirectURI = 'http://localhost:3000/spotify_landing';
+const prodRedirectURI = 'https://rhysjohnston.xyz/spotify_landing';
 const clientID = "7f6bb2cf63fc486ca40380f992a53051";
-const redirect_URI = 'http://localhost:3000/spotify_landing';
+const redirect_URI = prodRedirectURI;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 let accessKeyData = {};
-app.get('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/api/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loginResponse = yield (0, authHandler_1.handleLogin)(clientID, redirect_URI);
     res.redirect(loginResponse.url);
 }));
-app.get('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/api/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     console.log("Got traffic on /auth");
     const code = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
@@ -44,7 +46,7 @@ app.get('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(accessKeyData);
 }));
 // Gets top 20 tracks. 
-app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/api/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /tracks");
     let topTracks = yield (0, getTracks_1.getTracks)(accessKeyData.access_token);
     if (topTracks) {
@@ -54,7 +56,7 @@ app.get('/tracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.send(JSON.stringify("Couldn't get user tracks"));
     }
 }));
-app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/api/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Got traffic on /alltracks");
     try {
         const allTracks = yield (0, getAllTracks_1.getAllTracks)(accessKeyData.access_token);
@@ -73,7 +75,7 @@ app.get('/alltracks', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 const filePath = path_1.default.join(__dirname, '/csv_out/output.csv');
-app.get('/csvfile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/api/csvfile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Traffic on /csvfile");
     res.sendFile(filePath, (err) => {
         if (err) {

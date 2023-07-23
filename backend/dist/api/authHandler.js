@@ -27,11 +27,13 @@ const handleLogin = (clientID, redirect_URI) => __awaiter(void 0, void 0, void 0
 });
 exports.handleLogin = handleLogin;
 const handleToken = (accessCode, clientID, clientSecret) => __awaiter(void 0, void 0, void 0, function* () {
+    const prodRedirectURI = 'https://rhysjohnston.xyz/spotify_landing';
+    const devRedirectURI = 'http://localhost:3000/spotify_landing';
     const encodedStrings = btoa(clientID + ':' + clientSecret);
     const bodyParams = {
         grant_type: "authorization_code",
         code: accessCode,
-        redirect_uri: 'http://localhost:3000/spotify_landing',
+        redirect_uri: prodRedirectURI,
     };
     const tokenResponse = yield fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
