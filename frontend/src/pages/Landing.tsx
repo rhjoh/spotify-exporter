@@ -23,7 +23,7 @@ const LandingPage = () => {
     const [isAuthed, setIsAuthed] = useState<boolean>(false);
 
     useEffect(() => {
-        fetch('http://localhost:8000/auth', {
+        fetch('https://rhysjohnston.xyz/api/auth', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${returnedCode}`

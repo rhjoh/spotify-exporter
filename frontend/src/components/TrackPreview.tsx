@@ -12,13 +12,13 @@ const TopTracks = (props: any) => {
     const handleDownloadClick = () => {
         if (downloadState === 'not_started') {
             setDownloadState('download')
-            fetch('http://localhost:8000/alltracks')
+            fetch('https://rhysjohnston.xyz/api/alltracks')
                 .then(response => response.json())
                 .then(data => {
                     setDownloadState('complete')
                 })
         } else if (downloadState === 'complete') {
-            fetch('http://localhost:8000/csvfile')
+            fetch('https://rhysjohnston.xyz/api/csvfile')
             .then(response => response.blob())
             .then(blobResponse => {
                 const csvURL = URL.createObjectURL(blobResponse).toString()
@@ -49,7 +49,7 @@ const TopTracks = (props: any) => {
     }
 
     useEffect(() => {
-        fetch('http://localhost:8000/tracks')
+        fetch('https://rhysjohnston.xyz/api/tracks')
             .then(response => response.json())
             .then(data => {
                 console.log(data)
