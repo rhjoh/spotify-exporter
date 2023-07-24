@@ -4,7 +4,7 @@ const Home = () => {
 
     // How to manage env vars for different environments? 
     const dev_url = "http://localhost:8000/login";
-    const prod_url = "https://rhysjohnston.xyz/spotifytocsv/login";
+    const prod_url = "https://rhysjohnston.xyz/api/login";
 
 
     async function handleLogin() {
@@ -18,7 +18,7 @@ const Home = () => {
                 generate a CSV file of your 'Liked Songs' playlist. <br />
 
                 No data is stored server-side and you can remove access any time via your {" "}
-                <a href="https://support.spotify.com/us/article/spotify-on-other-apps/" className="header-link">Spotify account</a>
+                <a href="https://support.spotify.com/us/article/spotify-on-other-apps/" className="header-link" target='_blank' rel='noreferrer'>Spotify account</a>
                 </span>
             <button className="login-button" onClick={() => handleLogin()}>Login to Spotify</button>
         </div>
