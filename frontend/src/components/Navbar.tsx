@@ -5,7 +5,7 @@ const Navbar = () => {
     return (
         <div className="navbar-container">
             <div className='navbar-left'>
-                <a href='/spotifytocsv' target='_blank' rel='noreferrer'>Spotify Exporter</a>
+                <a href='/spotifytocsv'>Spotify Exporter</a>
             </div>
             <div className='navbar-right'>
             <i className="bi bi-github"> </i>
